@@ -30,7 +30,7 @@ def time_now():
 
 
 def console_log(*args):
-    print("[" + time_now() + "] ", args)
+    print("[" + time_now() + "] ", " ".join(args))
 
 
 def rmq_connect(rabbit_address):

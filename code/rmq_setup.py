@@ -142,7 +142,7 @@ def create_que(params, channel):
         rmq_tools.console_log("Очередь", params.queue, "успешно создана")
     except Exception:
         rmq_tools.console_log("Ошибка:\n", traceback.format_exc())
-        rmq_tools.console_log("Очередь", params.queue, "уже есть в кролике!")
+        rmq_tools.console_log("Ошибка создания очереди!")
 
 
 def create_exch(params, channel):
@@ -151,7 +151,7 @@ def create_exch(params, channel):
         rmq_tools.console_log("Exchange", params.exch, "успешно создан")
     except Exception:
         rmq_tools.console_log("Ошибка:\n", traceback.format_exc())
-        rmq_tools.console_log("Exchange", params.exch, "уже есть в кролике!")
+        rmq_tools.console_log("Ошибка создания excahange!")
 
 
 def delete(params, channel):

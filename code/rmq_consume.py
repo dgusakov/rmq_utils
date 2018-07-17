@@ -92,7 +92,7 @@ def on_message(channel, method_frame, header_frame, body):
     """
     global all_cnt, lim
     if all_cnt >= lim:
-        rmq_tools.console_log('Достаточное количество информации собранно.')
+        rmq_tools.console_log('Достаточное количество информации собрано.')
         raise KeyboardInterrupt
     body_str = body.decode("utf-8")[:4000]
     rk = method_frame.routing_key
