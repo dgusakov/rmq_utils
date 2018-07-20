@@ -12,9 +12,9 @@ def rabbit_connection_str(adr):
         Возврашет строку подключения к "кролику" в формате URLConnectionString
     """
     cp_rabbit = {
-        # Задем конект к кролику по IP, %2F - означает vhost = "/"
+        # Задаем коннект к кролику по IP, %2F - означает vhost = "/"
         '192.168.1.25': 'amqp://rabbit_user:rabbit_password@192.168.1.25:5672/%2F',
-        # Задем конект к кролику по HOSTNAME
+        # Задаем коннект к кролику по HOSTNAME
         'my-rmq01': 'amqp://rabbit_user:rabbit_pass@my-rmq01:5672/my_vhost'
     }
     while adr not in cp_rabbit and adr != 'exit':
