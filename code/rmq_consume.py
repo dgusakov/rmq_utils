@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import rmq_common_tools as rmq_tools  # конфигурационный файл с параметрами конекта к кроликам
 import sys
 import argparse  # парсер аргументов командной строки
@@ -87,7 +89,7 @@ def on_message(channel, method_frame, header_frame, body):
     Args:
          channel:       объект соединения с RabbitMQ
          method_frame:  объект с служебными параметрами сообщения из кролика
-         header_frame:  объект, содеражащий заголовок сообщения
+         header_frame:  объект, содержащий заголовок сообщения
          body:          тело сообщения
     """
     global all_cnt, lim
@@ -95,13 +97,12 @@ def on_message(channel, method_frame, header_frame, body):
         rmq_tools.console_log('Достаточное количество информации собрано.')
         raise KeyboardInterrupt
     body_str = body.decode("utf-8")[:4000]
-    rk = method_frame.routing_key
-    rmq_params.file.write(rk + '\n')
-    rmq_params.file.write(body_str + '\n\n')
+    rkey = method_frame.routing_key
+    cmd_line_arguments.file.write(rkey + '\n')
+    cmd_line_arguments.file.write(body_str + '\n\n')
     all_cnt = all_cnt + 1
-    if (lim != 0) and (rmq_params.file != sys.stdout):
-        sys.stdout.write('[' + rmq_tools.time_now() + '] - ' + str(all_cnt) + ' of ' + str(lim) +
-                         ' messages consumed. \r')
+    if (lim != 0) and (cmd_line_arguments.file == sys.stdout):
+        sys.stdout.write(f'[{rmq_tools.time_now()}] - {all_cnt} of {lim} messages consumed.\r')
     channel.basic_ack(delivery_tag=method_frame.delivery_tag)
 
 
@@ -170,26 +171,26 @@ def from_tmp_que(params, channel):
 
 
 args_parser = create_parser()
-rmq_params = args_parser.parse_args(sys.argv[1:])
+cmd_line_arguments = args_parser.parse_args(sys.argv[1:])
 
-if rmq_params.command not in ["from_existing_que", "from_tmp_que"]:
+if cmd_line_arguments.command not in ["from_existing_que", "from_tmp_que"]:
     args_parser.print_help()
     exit()
 
-rmq_connection = rmq_tools.rmq_connect(rmq_params.rabbit_address)
+rmq_connection = rmq_tools.rmq_connect(cmd_line_arguments.rabbit_address)
 rmq_channel = rmq_connection.channel()
 
-if rmq_params.count:
-    lim = int(rmq_params.count)
+if cmd_line_arguments.count:
+    lim = int(cmd_line_arguments.count)
 else:
     lim = 0
 
 all_cnt = 0
 
-if rmq_params.command == "from_existing_que":
-    from_existing_que(rmq_params, rmq_channel)
-elif rmq_params.command == "from_tmp_que":
-    from_tmp_que(rmq_params, rmq_channel)
+if cmd_line_arguments.command == "from_existing_que":
+    from_existing_que(cmd_line_arguments, rmq_channel)
+elif cmd_line_arguments.command == "from_tmp_que":
+    from_tmp_que(cmd_line_arguments, rmq_channel)
 else:
     print("Выбранная команда ничего не делает... Используйте -h для вызова справки")
 

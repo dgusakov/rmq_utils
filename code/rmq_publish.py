@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import rmq_common_tools as rmq_tools  # конфигурационный файл с параметрами конекта к кроликам
 import sys
 import argparse  # парсер аргументов командной строки

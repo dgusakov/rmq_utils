@@ -1,15 +1,17 @@
+# -*- coding: utf-8 -*-
+
 from datetime import datetime
 import pika
 
 
 def rabbit_connection_str(adr):
-    """Возвращет строку подключения к "кролику" по заданному имени из словаря
+    """Возвращает строку подключения к "кролику" по заданному имени из словаря
 
     Args:
          adr: имя строки подключения из словаря
 
     Returns:
-        Возврашет строку подключения к "кролику" в формате URLConnectionString
+        Возвращает строку подключения к "кролику" в формате URLConnectionString
     """
     cp_rabbit = {
         # Задаем коннект к кролику по IP, %2F - означает vhost = "/"
@@ -18,19 +20,18 @@ def rabbit_connection_str(adr):
         'my-rmq01': 'amqp://rabbit_user:rabbit_pass@my-rmq01:5672/my_vhost'
     }
     while adr not in cp_rabbit and adr != 'exit':
-        adr = input('[' + datetime.strftime(datetime.now(), "%H:%M:%S") + '] ' + '''Указанный "кролик" не найден в справочнике!
-        \n Введите корректый адрес сервера RabbitMQ или "exit" для прекращения работы \n''')
+        adr = input(f'[{time_now()}] Указанный "кролик" не найден в справочнике! \n'
+                    'Введите корректный адрес сервера RabbitMQ или "exit" для прекращения работы \n')
     if adr == 'exit':
         exit()
     return cp_rabbit[adr]
 
-
 def time_now():
-    return str(datetime.strftime(datetime.now(), "%H:%M:%S"))
+    return datetime.now().strftime('%H:%M:%S')
 
 
 def console_log(*args):
-    print("[" + time_now() + "] ", " ".join(args))
+    print(f'[{time_now()}] {" ".join(args)}')
 
 
 def rmq_connect(rabbit_address):
