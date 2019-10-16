@@ -1,0 +1,13 @@
+- params:
+          rmq: host
+          e: name_exchange
+          rk: routing_key
+  messages:
+          - '{"messages":messages,"messages":"123"}'
+- params:
+          rmq: host2
+          e: name_exchange2
+          rk: routing_key2
+  messages:
+          - '{"messages":messages,"messages":"123"}'
+   

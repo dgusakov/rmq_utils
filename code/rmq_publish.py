@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 import rmq_common_tools as rmq_tools  # конфигурационный файл с параметрами конекта к кроликам
+import yaml
 import sys
 import argparse  # парсер аргументов командной строки
 import traceback  # модуль для вывода трейса ошибки
 
 version = '1.0'
-
 
 def create_parser():
     # Создаем класс парсера
@@ -77,6 +77,19 @@ def create_parser():
     from_file_group.add_argument('-he', '--header',
                                  help='Заголовок сообщения')
 
+    # Создаем парсер для команды batch_sending
+    for_batch_sending_parser = subparsers.add_parser('batch_sending',
+                                                     # add_help=False,
+                                                     help='Режим публикации n-ого количества сообщений',
+                                                     description='''Запуск в режиме публикации n-ого количества сообщений из файла ''')
+    # Создаем новую группу параметров
+    for_batch_sending_group = for_batch_sending_parser.add_argument_group(title='Параметры')
+
+    for_batch_sending_group.add_argument('-mf', '--message_file', required=True, type=argparse.FileType(),
+                                         help='Имя файла с телами сообщений')
+    for_batch_sending_group.add_argument('-he', '--header',
+                                         help='Заголовок сообщения')
+
     return parser
 
 
@@ -101,21 +114,46 @@ def from_file(params, channel):
         rmq_tools.console_log("Ошибка публикации сообщения!")
 
 
+def batch_sending(params):
+    try:
+        check_list = ["rmq", "e", "rk"]
+        list_messages = yaml.load(params.message_file.read(),Loader=yaml.FullLoader)
+        for params_message in list_messages:
+            if rmq_tools.check_prarms(check_list,params_message['params']):
+                if len(params_message['messages']) != 0:
+                    rmq_tools.send_batch(params_message)
+                else:
+                    print(f'message - {str(params_message["messages"])} - ключ message пустой')
+                    return
+            else:
+                return
+    except Exception:
+        rmq_tools.console_log("Ошибка:\n", traceback.format_exc())
+        rmq_tools.console_log("Ошибка публикации сообщения!")
+
+
 args_parser = create_parser()
 rmq_params = args_parser.parse_args(sys.argv[1:])
 
-if rmq_params.command not in ["from_console", "from_file"]:
+if rmq_params.command not in ["from_console", "from_file", "batch_sending"]:
     args_parser.print_help()
     exit()
 
-rmq_connection = rmq_tools.rmq_connect(rmq_params.rabbit_address)
-rmq_channel = rmq_connection.channel()
 
-if rmq_params.command == "from_console":
-    from_console(rmq_params, rmq_channel)
-elif rmq_params.command == "from_file":
-    from_file(rmq_params, rmq_channel)
+
+if rmq_params.command == "batch_sending":
+    batch_sending(rmq_params)
+
 else:
-    print("Выбранная команда ничего не делает... Используйте -h для вызова справки")
+    rmq_connection = rmq_tools.rmq_connect(rmq_params.rabbit_address)
+    rmq_channel = rmq_connection.channel()
 
-rmq_tools.rmq_disconnect(rmq_connection)
+    if rmq_params.command == "from_console":
+        from_console(rmq_params, rmq_channel)
+
+    elif rmq_params.command == "from_file":
+        from_file(rmq_params, rmq_channel)
+    else:
+        print("Выбранная команда ничего не делает... Используйте -h для вызова справки")
+
+    rmq_tools.rmq_disconnect(rmq_connection)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
