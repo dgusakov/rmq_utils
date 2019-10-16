@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import rmq_common_tools as rmq_tools  # конфигурационный файл с параметрами конекта к кроликам
 import sys
 import argparse  # парсер аргументов командной строки
@@ -153,7 +151,7 @@ def create_exch(params, channel):
         rmq_tools.console_log("Exchange", params.exch, "успешно создан")
     except Exception:
         rmq_tools.console_log("Ошибка:\n", traceback.format_exc())
-        rmq_tools.console_log("Ошибка создания excahange!")
+        rmq_tools.console_log("Ошибка создания exchange!")
 
 
 def delete(params, channel):
