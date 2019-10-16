@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import rmq_common_tools as rmq_tools  # конфигурационный файл с параметрами конекта к кроликам
 import sys
 import argparse  # парсер аргументов командной строки
@@ -99,7 +97,7 @@ def create_parser():
                             help='Имя exchange',
                             metavar='Exchange')
     bind_group.add_argument('-rk', '--r_key', required=True,
-                            help='Routing_key для binding',
+                            help='Routing_key для биндинга',
                             metavar='Routing_key')
 
     # Создаем парсер для команды unbind
@@ -119,7 +117,7 @@ def create_parser():
                               help='Имя exchange',
                               metavar='Exchange')
     unbind_group.add_argument('-rk', '--r_key', required=True,
-                              help='Routing_key для binding',
+                              help='Routing_key для биндинга',
                               metavar='Routing_key')
 
     # Создаем парсер для команды purge
@@ -188,8 +186,7 @@ def unbind(params, channel):
     try:
         channel.queue_unbind(exchange=params.exch, queue=params.queue, routing_key=params.r_key)
         rmq_tools.console_log("Пересылка сообщений с routing_key = ",
-                              params.r_key, "\n из ", params.exch, "\nв очередь",
-                              params.queue, "успешно прекращена")
+                              params.r_key, "\n из ", params.exch, "\nв очередь", params.queue, "успешно прекращена")
     except Exception:
         rmq_tools.console_log("Ошибка:\n", traceback.format_exc())
         rmq_tools.console_log("Ошибка удаления binding!")
