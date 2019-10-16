@@ -1,6 +1,4 @@
-﻿# -*- coding: utf-8 -*-
-
-from datetime import datetime
+﻿from datetime import datetime
 import pika
 
 
