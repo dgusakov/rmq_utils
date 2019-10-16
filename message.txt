@@ -1,1 +1,5 @@
-{"json_num_field":154,"json_str_field":"some string"}
+[{"params":{"rmq":"mbus-rmq","e":"ps.msg_bis_notify","rk":"ps.pack_activate.1"},
+"message":[{"orderId":null,"endDate":"2999-12-31T00:00:00","subscriberId":95825628,"createUser":"SBMS:CRAB_APPL:CAREM_ML","imsi":"250026918050059",
+"activationDate":"2017-06-05T15:13:06","marketingCampaign":{"deactivationDate":null,"marketingCampaignId":null,"endPeriodActionType":null,
+"type":null,"name":null},"recurringFlag":1,"packCategoryId":null,"ratePlanId":610,"traceNumber":5368772,"packId":3878,"activationType":null,
+"customerId":78693351,"operationDate":"2017-06-05T15:13:06","msisdn":"9257439040","subscriberZoneId":79,"MSISDN":"9257439040","IMSI":"250026918050059"}]}]
