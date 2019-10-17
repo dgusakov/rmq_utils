@@ -3,11 +3,11 @@
           e: name_exchange
           rk: routing_key
   messages:
-          - '{"key":"value","key":"value"}'
+          - '{"key1":"value1","key2":"value2"}'
 - params:
           rmq: host2
           e: name_exchange2
           rk: routing_key2
   messages:
-          - '{"key":"value","key":"value"}'
+          - '{"key3":"value3","key4":"value4"}'
    
