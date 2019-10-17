@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from datetime import datetime
+﻿from datetime import datetime
 import pika
 
 
@@ -20,11 +18,12 @@ def rabbit_connection_str(adr):
         'my-rmq01': 'amqp://rabbit_user:rabbit_pass@my-rmq01:5672/my_vhost'
     }
     while adr not in cp_rabbit and adr != 'exit':
-        adr = input(f'[{time_now()}] Указанный "кролик" не найден в справочнике! \n'
+        adr = input(f'[{time_now()}] Указанный "кролик" - "{adr}" не найден в справочнике! \n'
                     'Введите корректный адрес сервера RabbitMQ или "exit" для прекращения работы \n')
     if adr == 'exit':
         exit()
     return cp_rabbit[adr]
+
 
 def time_now():
     return datetime.now().strftime('%H:%M:%S')
@@ -45,3 +44,31 @@ def rmq_connect(rabbit_address):
 
 def rmq_disconnect(connection):
     connection.close()
+
+
+def check_prarms(list, dict_check):
+    # Проверка наличия параметров в словаре
+    for param in list:
+        if param not in dict_check:
+            console_log(f' Параметр - "{param}" не найден в {dict_check}')
+            return False
+        if len(dict_check[param]) == 0:
+            console_log(f' Параметр - "{param}"  пустой в {dict_check}')
+            return False
+    return True
+
+
+def send_batch(param_message):
+    #Пакетная отправка
+    try:
+        rmq_connection = rmq_connect(param_message['params']['rmq'])
+        rmq_channel = rmq_connection.channel()
+        for message in param_message['messages']:
+            rmq_channel.basic_publish(exchange=param_message['params']['e'], routing_key=param_message['params']['rk'],
+                                        body=message)
+            console_log("Сообщение: \n", str(message), "\nс routing_key =", param_message['params']['rk'],
+                            "\nуспешно опубликовано в exchange - ", param_message['params']['e'])
+    except:
+         rmq_disconnect(rmq_connection)
+         raise
+
